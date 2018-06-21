@@ -11,7 +11,7 @@ const controls = [
 
 const BuildControls = styled.div`
   width: 100%;
-  background-color: #cf8f2e;
+  background-color: #a27157;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -84,7 +84,9 @@ const buildControls = props => {
           disabled={props.disabled[ctrl.type]}
         />
       ))}
-      <OrderButton disabled={!props.purchaseable}>Order</OrderButton>
+      <OrderButton onClick={props.ordered} disabled={!props.purchaseable}>
+        Order
+      </OrderButton>
     </BuildControls>
   );
 };

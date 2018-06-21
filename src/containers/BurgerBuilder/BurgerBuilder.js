@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Burger from '../../components/Burger/Burger.js';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls.js';
-
+import Modal from '../../components/UI/Modal/Modal.js';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary.js';
 const INGRIDIENT_PRICES = {
   salad: 0.5,
   cheese: 0.4,
@@ -19,11 +20,11 @@ class BurgerBulider extends React.Component {
     },
     totalPrice: 4,
     purchaseable: false,
-    totalIngredients: null
+    totalIngredients: null,
+    purchasing: false
   };
 
   addIngiridentHandler = type => {
-    const updatedIngridients = { ...this.state.ingridients };
     const prevVal = this.state.ingridients[type];
     this.setState({
       ingridients: { ...this.state.ingridients, [type]: prevVal + 1 },
@@ -33,7 +34,6 @@ class BurgerBulider extends React.Component {
     });
   };
   removeIngiridentHandler = type => {
-    const updatedIngridients = { ...this.state.ingridients };
     const prevVal = this.state.ingridients[type];
     if (this.state.ingridients[type] !== 0) {
       this.setState({
@@ -46,6 +46,15 @@ class BurgerBulider extends React.Component {
       }
     }
   };
+  purchaseHandler = () => {
+    this.setState({ purchasing: true });
+  };
+  purchaseCancelHandler = () => {
+    this.setState({ purchasing: false });
+  };
+  purchaseContinueHandler = () => {
+    alert('Purchase continued');
+  };
 
   render() {
     const disabledInfo = {
@@ -57,6 +66,17 @@ class BurgerBulider extends React.Component {
 
     return (
       <React.Fragment>
+        <Modal
+          modalClosed={this.purchaseCancelHandler}
+          show={this.state.purchasing}>
+          <OrderSummary
+            price={this.state.totalPrice}
+            closeModal={this.purchaseCancelHandler}
+            continuePurchase={this.purchaseContinueHandler}
+            ingridients={this.state.ingridients}
+          />
+        </Modal>
+
         <Burger ingridients={this.state.ingridients} />
         <BuildControls
           removeIngridient={this.removeIngiridentHandler}
@@ -64,6 +84,7 @@ class BurgerBulider extends React.Component {
           disabled={disabledInfo}
           price={this.state.totalPrice}
           purchaseable={this.state.purchaseable}
+          ordered={this.purchaseHandler}
         />
       </React.Fragment>
     );
